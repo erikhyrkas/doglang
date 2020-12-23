@@ -13,6 +13,4 @@ Cargo.lock
 # Added by cargo
 
 /target
-/.idea/doglang.iml
-/.idea/modules.xml
-/.idea/vcs.xml
+/.idea
