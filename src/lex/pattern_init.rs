@@ -73,7 +73,7 @@ unsafe fn build_patterns() {
     PATTERNS.push(build_keyword("module", "mod")); // mod [[module name]::[submodulename]] [(os: "windows", arch: "x86")]
 
     // types
-    PATTERNS.push(build_keyword("string", "str"));
+    //PATTERNS.push(build_keyword("string", "str")); // we'll use a struct/trait for this
     PATTERNS.push(build_keyword("unsigned integer", "uint"));
     PATTERNS.push(build_keyword("integer", "int"));
     PATTERNS.push(build_keyword("float", "float"));

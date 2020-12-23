@@ -107,6 +107,7 @@ Dog
   let w: float = z
 ```
 ## Parenthesis
+
 We could have if/while/switch statements use parenthesis for the expression they are evaluating, like:
 ```
   if (a || b) {
@@ -460,11 +461,6 @@ For a given scope, only a parameter's name may shadow another variable.
 
 ## Ownership and Mutability
 
-Safe: High
-Easy: Low
-Fast: High
-Flexible: Low
-
 When you allocate an object in most languages, it goes on the heap and lives through that languages object
 life-cycle. Depending on the language, there may be many references to that object, but anybody that has a
 reference can probably modify it.
@@ -493,33 +489,34 @@ So, `mut` largely exists to help with concurrency, but it also helps a little wi
 
 ## Pass by value and reference
 
-And `ref`? Why does that even exist? Shouldn't everything be pass-by-reference?
+This has been a hard internal struggle for me as I weigh performance and language ergonomics. 
 
-I decided to make Dog pass-by-value, as this allows the compiler to prefer using the stack over the heap in
-many use cases. This is usually good for performance if variables being passed aren't too big and it also helps
-with performance that you can't have two different locations modify the same object.
+Pass-by-value copies parameters to a function on the stack. If that parameter was mutable, any change you made to
+it would not impact the original value. However, if we do flag the variable as mutable, it is intuitive to me that
+we are saying we want to change the original variable, so that leads us to...
 
-That said, some objects will use the heap, or they will reference objects that use the heap, because their size isn't
-fixed. Walking the heap to copy them and their child references would be brutal. A shallow copy could be done which would
-be fast, but then the behavior would be inconsistent: if I modify the child of an object passed to me, it will have side
-effects on the caller's copy, but changes to the top level object are not reflected to the caller.
+Pass-by-reference sends a pointer to the original object so that any operations done to it are on the original copy.
 
-Why not do what Java did and pass primitives by-value, but objects by-ref? Because not all objects need to be on the
-heap and Java's approach is slow in those cases.
+Within a function itself, how the code is generated when it interacts with a structure or primitive changes depending 
+on whether it represents a pointer or a local variable.
 
-So, an object that is passed by-value in Dog cannot be modified, nor can it be passed by-ref to another function, which
-would create a loophole.
+I had been considering a `ref` keyword, but it seems redundant to me, since I don't think code should reassign the 
+value of a parameter unless their intent was to change the original value.
 
-An object passed by `ref` can only be modified if the function declares it can be using the `mut` keyword, and it can only
-passed to other functions that are also `ref` and `mut`.
+For variable assignment, I believe primitives need to always be by-value. We'd need a more expressive syntax that would
+be harder to use if we wanted to have structure members that referred to members of other structures and the behavior
+would not be safe. I think that object references are common enough in languages that people will assume them to 
+exist. Primitive references, that would take some C like syntax and maybe then we'd need that `ref` keyword. 
 
-... hmm.. now that i think of it, if the `mut` keyword is on a function you are about to pass a value to, I could do two
-things:
-* verify that the object came in as a parameter with `mut`
-* or verify that i created the object on the heap in this function -- the compiler can be sure to put
-  it on the heap if it knows we'll use it this way in this function in the future.
+On the whole, I don't want users to think much about this. The standard pattern should be to have immutable parameters,
+and only make them mutable if they really need to be. This gives the compiler the option to pass-by-value or reference,
+depending on the size of the object, and potentially help thread safety and performance.
 
-... hmm... is this good enough... must think
+TODO: I'm trying to decide if there is ever a case where you pass a structure's primitive member to a function 
+by-reference, only to have the object garbage collected. I think to prevent this, you can't pass a primitive into
+a new thread by-reference. It has to be by value, or you need to pass the parent object. This is because garbage
+collectors look at full structures, not sub-parts of their allocation. To it, it sees an array of bytes with a little
+metadata, not individual fields.
 
 ## Code before entry points
 
@@ -599,6 +596,37 @@ If you implement the `Resource` trait and define the `acquire()` and `release()`
 ## Memory
 
 static, stack, and heap
+
+Static memory is simply the memory that the application takes up when it is loaded. You can reference it, and you can
+get in trouble by writing to it and then overwriting bits of code. Static memory makes sense for constants and for
+global values.
+
+Stack memory is allocated for each thread, including the main thread. The linker that compiled the application decides
+the default stack size for the application's main thread, which is typically 1 megabytes. This can be changes. Each
+thread that is allocated gets it's own stack, which is typically 1 megabyte. Because the chunk of memory is reserved
+when the thread is created, and because of the way that allocations and deallocations work (last in first out), it is 
+very fast to use stack memory. The only problem with it is that it is relatively small and allocations on it only 
+live for the duration of their scope. Because it is so fast though, many languages attempt to maximize their use of it.
+Rust is an example of a language that requires you to explicitly allocate structures on the heap. 
+
+The Java JVM will do what is called "escape analysis" and if it determines that an object won't live past the current
+thread's scope, then it will use the stack rather than the heap to allocate the object. (Escape analysis also helps
+it determine if it can remove synchronization because the object isn't accessed by multiple threads and it can also
+help it determine whether parts of the object can be stored in registers or whether it needs to remain in memory for
+safer concurrent access.)
+
+Heap memory is that which is allocated and freed by the program. It is expensive to allocate because it requires a
+search for a large enough chunk of memory for an allocation, and when memory fragmentation occurs, it becomes more
+and more difficult over the life of the application. When we discuss garbage collection, it is the heap space that
+we are referring to. By default any object that has to live beyond the current scope it was created in must be on 
+the heap.
+
+For Dog, the goal is design the syntax in such a way that escape analysis is possible and safe and that interactions
+with native code is also possible. 
+
+For the `internal` package, all allocations will need to be static or stack because there will be no garbage collector,
+since it is the code defining the garbage collector! For the `std` package, structs will all use the heap initially 
+until we have strong enough escape analysis to use the stack. 
 
 
 
@@ -696,3 +724,25 @@ Ideally, I'd like to implement the Itanium C++ ABI: Exception Handling standard,
 [LLVM exception handling details](https://llvm.org/docs/ExceptionHandling.html)
 
 [Read the Docs examples of exception handling](https://mapping-high-level-constructs-to-llvm-ir.readthedocs.io/en/latest/exception-handling/index.html)
+
+## Object
+At the moment, there is no plan for a top level "Object" or shared trait for everything.
+
+There might be some popular traits like "Hashable", "Comparable" (?), and "Textual" (Is there a better name for a trait that has
+a as_string() function?)
+
+## Traits on primitives
+There are so many times it will be useful to put a trait on a primitive, but it will require some magic with the `self`
+keyword. In all other cases, `self` points at a `struct` that can be accessed, but here we are directly accessing the
+bytes as a type. Mostly this is fine, I think, but there will need to be additional logic to handle this.
+
+## Runtime Type Information
+I think the most elegant (?!) way to handle this is to make a trait like `TypeInfo`.
+
+Maybe?!?! Automatically generate it for all types that don't define it for themselves. I know that in the 
+[Object](#Object) section, I said there wouldn't be an Object class, and suddenly here is a class that would 
+likely be on everything. It could simply be optional, but it is so boiler plate that it would be easy to generate.
+Even more, it might allow for methods that return the type traits more accurately than a user could. Like size of 
+the object in bytes (although this is a trap because of memory alignment -- so there are at least two sizes, one 
+for how much it is taking up in memory and one for how many bytes it represents. There would likely need to be a 
+different size for how big it was to serialize... though maybe that needs to be a different trait.)
