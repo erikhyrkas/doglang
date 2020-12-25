@@ -1,8 +1,7 @@
 use crate::lex::group::Group;
 
 #[derive(Debug)]
-pub struct AnyChar {
-}
+pub struct AnyChar {}
 
 impl Group for AnyChar {
     fn match_with(&self, text: &[char], offset: usize) -> Option<u32> {

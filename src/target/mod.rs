@@ -1,6 +1,14 @@
-use crate::check::Check;
-use crate::generate::Generate;
+use check::Check;
+use generate::Generate;
+
 use crate::goal::{Command, UserGoal};
+
+mod rebuild;
+mod generate;
+mod check;
+mod compile;
+mod clean;
+mod build;
 
 #[derive(Debug)]
 pub struct BuildData {

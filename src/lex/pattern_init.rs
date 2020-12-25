@@ -24,6 +24,8 @@ pub fn get_patterns() -> &'static Vec<Pattern> {
 unsafe fn build_patterns() {
     // these patterns are in order of precedence from highest to lowest
 
+    PATTERNS.push(build_keyword("log", "log"));
+
     // assignment
     PATTERNS.push(build_keyword("let", "let"));
 
@@ -103,8 +105,8 @@ unsafe fn build_patterns() {
     PATTERNS.push(build_word());
 
     // symbols
-    PATTERNS.push(build_named_character("openCurly", '{'));
-    PATTERNS.push(build_named_character("closeCurly", '}'));
+    PATTERNS.push(build_named_character("open_curly", '{'));
+    PATTERNS.push(build_named_character("close_curly", '}'));
     PATTERNS.push(build_named_character("comma", ','));
     PATTERNS.push(build_named_character("equal", '='));
     PATTERNS.push(build_named_character("greater", '>'));
@@ -115,12 +117,12 @@ unsafe fn build_patterns() {
     PATTERNS.push(build_named_character("period", '.'));
     PATTERNS.push(build_named_character("slash", '/'));
     PATTERNS.push(build_named_character("hash", '#'));
-    PATTERNS.push(build_named_character("openParen", '('));
-    PATTERNS.push(build_named_character("closeParen", ')'));
-    PATTERNS.push(build_named_character("openBracket", '['));
-    PATTERNS.push(build_named_character("closeBracket", ']'));
+    PATTERNS.push(build_named_character("open_paren", '('));
+    PATTERNS.push(build_named_character("close_paren", ')'));
+    PATTERNS.push(build_named_character("open_bracket", '['));
+    PATTERNS.push(build_named_character("close_bracket", ']'));
     PATTERNS.push(build_named_character("exclamation", '!'));
-    PATTERNS.push(build_named_character("questionMark", '?'));
+    PATTERNS.push(build_named_character("question_mark", '?'));
     PATTERNS.push(build_named_character("colon", ':'));
     PATTERNS.push(build_named_character("pipe", '|'));
 

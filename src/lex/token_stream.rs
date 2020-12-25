@@ -1,12 +1,12 @@
-
 #[derive(Debug)]
 pub struct TokenStream {
     pub matches: Vec<Box<Match>>,
     pub offset: usize,
+    pub fresh: bool,
     pub last_consumed_offset: Option<usize>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Match {
     pub length: usize,
     pub label: String,
@@ -20,10 +20,16 @@ pub struct Match {
 
 impl TokenStream {
     fn find_next_offset(&self) -> Option<usize> {
-        if self.matches.is_empty() || self.offset == self.matches.len() {
+        if self.matches.is_empty() || self.offset >= self.matches.len() {
             return None;
         }
-        for next_offset in self.offset + 1..self.matches.len() - 1 {
+        let start_offset: usize;
+        if self.fresh {
+            start_offset = 0;
+        } else {
+            start_offset = self.offset + 1;
+        }
+        for next_offset in start_offset..self.matches.len() {
             let next = &self.matches[next_offset];
             if !next.skip {
                 return Some(next_offset);
@@ -43,7 +49,7 @@ impl TokenStream {
         if next_offset.is_none() {
             return None;
         }
-
+        self.fresh = false;
         // it is so clumsy to work with optionals sometimes.
         self.offset = next_offset.unwrap();
         if let Some(last_consumed_offset) = self.last_consumed_offset {

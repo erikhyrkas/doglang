@@ -50,7 +50,7 @@ impl Group for AndGroup {
                         if !failed {
                             count += match_amount;
                             //println!("Any matched [{}] characters. (Successful match.)", match_amount);
-                        //} else {
+                            //} else {
                             //println!("Any matched [{}] characters at [{}]. (Failed match, next group offset {} is less than {}.)", match_amount, current_offset, next_group_offset, current_offset + match_amount as usize);
                         }
                     }

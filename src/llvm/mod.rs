@@ -1,3 +1,5 @@
+// take in the optimized dog code and convert it into llvm code, then link it.
+
 extern crate llvm_sys;
 
 use llvm_sys::{LLVMBuilder, LLVMIntPredicate, LLVMModule};
@@ -7,8 +9,9 @@ use llvm_sys::core::*;
 use llvm_sys::prelude::*;
 use llvm_sys::target::*;
 use llvm_sys::target_machine::*;
-use llvm_sys::transforms::pass_manager_builder::*;
+//use llvm_sys::transforms::pass_manager_builder::*;
 use std::ffi::{CStr, CString};
+use std::ptr;
 
 macro_rules! c_str {
     ($s:expr) => (
@@ -27,7 +30,7 @@ pub fn get_default_target_triple() -> CString {
     target_triple
 }
 
-fn compile() {
+pub fn compile() {
     unsafe {
 // setup
         let context = LLVMContextCreate();

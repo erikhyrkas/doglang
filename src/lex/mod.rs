@@ -14,8 +14,9 @@ use token_stream::TokenStream;
 
 use crate::lex::pattern_init::get_patterns;
 use crate::lex::token_stream::Match;
+use crate::UNKNOWN;
 
-mod token_stream;
+pub(crate) mod token_stream;
 mod pattern;
 mod or_group;
 mod text_pattern;
@@ -27,9 +28,7 @@ mod character_range;
 mod any_char;
 mod group;
 
-const UNKNOWN: &str = "Unknown";
-
-pub fn lex(dog_code: &str, file_name: Option<&str>, file_path: Option<&str>) -> Box<TokenStream> {
+pub fn lex(dog_code: &str, file_name: Option<&str>, file_path: Option<&str>) -> Option<Box<TokenStream>> {
     let real_file_name = String::from(file_name.unwrap_or(UNKNOWN));
     let real_file_path = String::from(file_path.unwrap_or(UNKNOWN));
     println!("Lexing: {} ({})", real_file_name, real_file_path);
@@ -77,15 +76,17 @@ pub fn lex(dog_code: &str, file_name: Option<&str>, file_path: Option<&str>) -> 
             }
 
             val_as_string = String::from_iter(val.iter());
-            panic!("Unable to match text at [line: {}: character: {}]: [{}] [{}]", line_number, line_offset, val[0], val_as_string);
+            println!("Unable to match text at [line: {}: character: {}]: [{}] [{}]", line_number, line_offset, val[0], val_as_string);
+            return None;
         }
     }
 
-    return Box::new(TokenStream {
+    return Some(Box::new(TokenStream {
         matches,
         offset: 0,
+        fresh: true,
         last_consumed_offset: None,
-    });
+    }));
 }
 
 fn find_longest_match(text: &Vec<char>, offset: usize) -> Option<Box<Match>> {
@@ -109,7 +110,7 @@ fn find_longest_match(text: &Vec<char>, offset: usize) -> Option<Box<Match>> {
     return Some(Box::new(longest_match.unwrap()));
 }
 
-fn render_string(s : String) -> String {
+fn render_string(s: String) -> String {
     let mut result = s.replace("\n", "\\n");
     result = result.replace("\r", "\\r");
     result = result.replace("\t", "\\t");

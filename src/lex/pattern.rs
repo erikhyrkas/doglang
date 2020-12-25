@@ -1,7 +1,7 @@
 // the pattern is the heart of defining a token
 
-use crate::lex::token_stream::Match;
 use crate::lex::group::Group;
+use crate::lex::token_stream::Match;
 
 pub struct Pattern {
     pub label: String,
