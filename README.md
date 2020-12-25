@@ -21,7 +21,8 @@ Rust:
 * https://doc.rust-lang.org/std/index.html
 * https://github.com/rust-lang/rust
 * https://doc.rust-lang.org/nomicon/index.html
-  
+* https://m-decoster.github.io//2017/01/16/fighting-borrowchk/ 
+ 
 Utility:
 * http://ellcc.org/demo/index.cgi
 * https://mapping-high-level-constructs-to-llvm-ir.readthedocs.io/en/latest/README.html

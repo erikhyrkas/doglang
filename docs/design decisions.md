@@ -746,3 +746,100 @@ Even more, it might allow for methods that return the type traits more accuratel
 the object in bytes (although this is a trap because of memory alignment -- so there are at least two sizes, one 
 for how much it is taking up in memory and one for how many bytes it represents. There would likely need to be a 
 different size for how big it was to serialize... though maybe that needs to be a different trait.)
+
+## Log levels
+In the config, we'll allow user defined log levels that can be an aggregate of other levels.
+
+At compile time add or remove log statements if they don't match the log level.
+
+Exact syntax pending, this is the general idea though:
+```
+    // somewhere in your config
+
+    // specify the logging init function, it must return a trait of type Logger, 
+    // the logger class will do the actual writing out of the text that is resolved
+    // logger.write(text) will not be called if the logging level doesn't line up
+    
+    // if no init function is defined, the compiler use the default logger
+    // from internal which in turn uses a C function puts() or fwrite/fprintf(stderr) 
+    
+    // a customer logger is welcome to use other properties from the config
+    // to control its behavior (like picking a log folder or an output format, or whatever)
+    log_init_function: std::log::default_logger() // likely only in your top level config
+     
+    // this step might be unnecessary, but I can imagine it making it easier to 
+    // switch from one setup to another 
+    // list of valid log levels and the other log levels they include  
+    log_levels: [ // likely only in your top level config
+        none(),
+        release(),
+        debug_io(),
+        debug_other(),
+        debug(debug_io, debug_other, release)
+    ]
+    
+    // specify a list of log levels that are active 
+    active_log_levels: [ // likely only in your top level config
+        debug // pulls in debug_io, debug_other, release
+    ]
+```
+
+I think this makes a good argument for a `log` keyword, because it 
+would change how the code compiles in a way you couldn't do at compile time.
+
+Without a keyword we could do:
+```
+    // this can be optimized by a keyword, but would work without one
+    log(debug, "this is a debug message.")
+    
+    // one could use a lambda even if we didn't have a keyword:
+    log(debug_io, || -> {
+        let x: int = some_calculation()
+        return "hear me: " + x 
+    })
+```
+With a keyword we could do:
+```    
+    // however maybe a syntax like this?
+    log.debug_io {
+        let x: int = some_calculation()
+        return "hear me: " + x 
+    }
+    // and
+    log.debug("this is a debug message.") 
+```
+
+I'll think on it a little more. The drawback to a keyword like `log` is largely
+an increased amount of knowledge a user needs to master the language. It also 
+makes it impossible to have a function named "log", which is what happens when you
+make a keyword. However, I think that logger.write() or .append() is fine.
+
+## Code blocks that only get compiled for specific configs
+
+The log keyword thoughts led me to another thought. There are applications that
+need to initialize differently when they are run on a local machine rather than 
+on a server or a different environment.
+
+If you can have blocks of code that run based on a config, it would allow you to 
+specify it in a way that is idiomatic and reduces the compiled executable's size or
+library requirements.
+
+
+Syntax TBD:
+```
+fn my_fun() {
+
+    // if local is set to true in the config:
+    config(local) {
+        // do code specific to the local config  
+    }
+    
+    // I don't like this syntax, but some sort of conditional check on a config value:
+    config(server_name == "hal" && !local) {
+        // do code specific to local  
+    }
+}
+```
+
+There's some risks associated with changing what is compiled, but if we treat variables declared within the scope as 
+local to that scope, then it shouldn't prevent any given config permutation from compiling.
