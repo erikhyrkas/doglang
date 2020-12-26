@@ -1,26 +1,26 @@
-#Design goals of Dog
+# Design goals of Dog
 
 See more details here: [Design Decisions](design%20decisions.md)
 
-##Goal statement
+## Goal statement
 Process and move data efficiently and with little effort.
 
-##Secondary goals
+## Secondary goals
 * Safe
 * Easy
 * Fast
 * Flexible  
 * Cross platform
 
-##Process Data
+## Process Data
 First-class SQL support, dataframes, and a collections API all let you operate on data using a familiar syntax.
 
-##Moving Data
+## Moving Data
 Support for common file formats (csv, parquet, json, etc.), cloud object-store support (s3/adfs), REST/HTTP API support, 
 and ODBC database connectivity all allow data to be extracted from a source, transformed, and loaded into a new 
 destination.
 
-##Easy
+## Easy
 Simple and repeatable syntax patterns that are familiar without burdening the user with a deep understanding of memory, 
 threads, sockets, registers, or serialization. 
 
@@ -30,10 +30,10 @@ Simple approach to structures and traits that avoids inheritance pitfalls and en
 
 No need to configure garbage collector or the heap.
 
-##Safe
+## Safe
 Garbage collection, exception handling, resource management, and constructs to encourage safe concurrency.
 
-##Fast
+## Fast
 Produces natively compiled executables optimized to avoid unnecessary register clears, expensive heap allocations and 
 de-allocations, and maximize concurrency. 
 

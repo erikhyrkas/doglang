@@ -1,4 +1,4 @@
-#Rust Snippets
+# Rust Snippets
 
 ## Debug display of struct
 Displays the type of an object (debug use only):
@@ -9,7 +9,7 @@ fn print_type_of<T>(_: &T) {
 }
 ```
 
-##Making a dynamic trait clone-able
+## Making a dynamic trait clone-able
 
 
 ```rust
@@ -40,4 +40,4 @@ impl<T> RuleClone for T
 }
 
 ```
-#Dog Snippets
+# Dog Snippets
