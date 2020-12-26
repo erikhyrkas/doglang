@@ -15,7 +15,7 @@ the chicken comes first, then the egg, and then the new chicken.
 * Install CLion [CLion setup](clion%20setup.md)
 * Clone: https://github.com/erikhyrkas/doglang.git
 
-Read the docs:
+## Read the Docs
 
 [Dog docs](https://github.com/erikhyrkas/doglang/blob/main/docs/README.md)
 

@@ -5,8 +5,8 @@ A tuple is a specialized struct with unnamed members.
 ```
     let x: (i32, i8) = (100, 5) // anonymous tuple holding 100 and 5
     
-    println("{} is the first number.", x.0) // prints out 100
-    println("{} is the second number.", x.1) // prints out 5
+    println('{} is the first number.', x.0) // prints out 100
+    println('{} is the second number.', x.1) // prints out 5
 ```
 
 You can create a named tuple like this:
@@ -17,8 +17,8 @@ You can create a named tuple like this:
     ...
     
     let x: MyTuple = (100, 5)
-    println("{} is the first number.", x.0) // prints out 100
-    println("{} is the second number.", x.1) // prints out 5
+    println('{} is the first number.', x.0) // prints out 100
+    println('{} is the second number.', x.1) // prints out 5
     return x
 ```
 

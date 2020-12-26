@@ -82,7 +82,7 @@ or this:
 ```
     let x:List<MyTrait> = List<MyTrait>()
     x.add(MyTrait {
-        prop1: "my property value",
+        prop1: 'my property value',
         prop2: 1000
     })
 ```

@@ -9,7 +9,7 @@ Creating a simple application that prints out `Hello World!`.
 
 ```
 app HelloWorld() {
-  println("Hello world!") 
+  println('Hello world!') 
 }
 ``` 
 
@@ -23,7 +23,7 @@ fn saySomething(something: string) {
 }
 
 app HelloWorld() {
-  saySomething("I did it!") 
+  saySomething('I did it!') 
 }
 ```
 
@@ -31,7 +31,7 @@ We'll do one more example with variables, loops, and conditional logic.
 
 ```
 fn requestValue(): string {
-    println("Type a number and hit enter:")
+    println('Type a number and hit enter:')
     return readln()
 }
 
@@ -47,9 +47,9 @@ app Compute() {
     let value1: string = requestValue()
     let value2: string = requestValue()
     let result: int = compute( (int or 0) value1, (int or 0) value2 )
-    println("Your result is {}", result)
+    println('Your result is {}', result)
     if result == 42 {
-        println("You win!")
+        println('You win!')
     }
 }
 ```

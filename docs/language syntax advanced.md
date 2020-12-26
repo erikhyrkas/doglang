@@ -64,7 +64,7 @@ A keyword would be handy because it could let you do things like this:
 // by declaring "once" this function's result is cached for the given parameters (value:int)
 once fn my_func(value: int): MyTrait {
     return MyTrait {
-        prop1: "I'm a singleton"
+        prop1: 'I'm a singleton'
         prop2: value
     }
 }
@@ -175,9 +175,9 @@ In config, example 1:
 config MyConfig {
     static_native_libraries: [
         does_something: {
-            lib_name: "something",
+            lib_name: 'something',
             functions: {
-                "system" lib_func1(text:string):int,
+                'system' lib_func1(text:string):int,
                 lib_func2(num1:int, num2:int):string
             }
         }
@@ -191,7 +191,7 @@ and `.dll`, `.so`, `.dylyb` for dynamic libraries.)
 Using it in code:
 ```
     ...
-    let result1: int = does_something::lib_fun1("hello library")
+    let result1: int = does_something::lib_fun1('hello library')
     let resutl2: string = does_something::lib_fun2(1, 2)
     ...
 ```
@@ -202,12 +202,12 @@ config MyConfig {
     static_native_libraries: [
         does_something: {
             path: {
-                windows: "something.lib",
-                linux: "something.a",
-                macox: "something.a"
+                windows: 'something.lib',
+                linux: 'something.a',
+                macox: 'something.a'
             },
             functions: {
-                "system" lib_func1(text:string):int,
+                'system' lib_func1(text:string):int,
                 lib_func2(num1:int, num2:int):string
             }
         }
@@ -227,9 +227,9 @@ In config, example 1:
 config MyConfig {
     dynamic_native_libraries: [
         dyn_does_something: {
-            lib_name: "something",
+            lib_name: 'something',
             functions: {
-                "system" lib_func1(text:string):int,
+                'system' lib_func1(text:string):int,
                 lib_func2(num1:int, num2:int):string
             }
         }
@@ -245,12 +245,12 @@ config MyConfig {
     dynamic_native_libraries: [
         dyn_does_something: {
             path: {
-                windows: "something.dll"
-                linux: "something.so"
-                macox: "something.dylib"
+                windows: 'something.dll'
+                linux: 'something.so'
+                macox: 'something.dylib'
             }
             functions: {
-                "system" lib_func1(text:string):int
+                'system' lib_func1(text:string):int
                 lib_func2(num1:int, num2:int):string
             }
         }
@@ -262,7 +262,7 @@ Using it in code:
 ```
     ...
     dyn_does_something::load() // if you don't load first, the functions below will fail.
-    let result1: int = dyn_does_something::lib_fun1("hello library")
+    let result1: int = dyn_does_something::lib_fun1('hello library')
     let resutl2: string = dyn_does_something::lib_fun2(1, 2)
     ...
 ```
@@ -276,7 +276,7 @@ if you need something operating system specific.
 
 Example:
 ```
-mod my_mod_name (os:"windows")
+mod my_mod_name (os:'windows')
 ```
 
 In general, it is advised to only use this for situations that are absolutely necessary, or your code 

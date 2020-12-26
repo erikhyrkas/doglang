@@ -2,7 +2,7 @@
 
 ## fail and otherwise
 Any code block can call fail like this:
-`fail("This is the reason something bad happened")`
+`fail('This is the reason something bad happened')`
 
 You can catch the failures with an otherwise statement.
 
@@ -33,6 +33,6 @@ fn will_fail() {
     will_fail()
     // do more things
   } otherwise {
-    println("We ignored the failure.")
+    println('We ignored the failure.')
   }
 ```

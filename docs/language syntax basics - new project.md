@@ -130,7 +130,7 @@ TODO: are there others? `std` should definitely be a default, should `std::colle
 
 ```
 config Release {
-    version: string = "1.0.0"
+    version: string = '1.0.0'
     my_prop: int 12
 }
 
@@ -145,5 +145,5 @@ config Debug : Release {
 ```
 
 In that example `my_prop` is a custom property that the code can use, where version is a built-in
-property that exists even if you don't specify it, but you'd get a default value of "0.0.1".
+property that exists even if you don't specify it, but you'd get a default value of '0.0.1'.
 

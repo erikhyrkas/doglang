@@ -136,11 +136,10 @@ Without them, it looks *slightly* neater and more legible:
 ## Semicolons
 
 I feel like semicolons for terminating instructions exists in many languages because it made
-it easier to parse and also made possible to have if/while/for statements that were single lines.
-
-I do not like the idea of if statements that don't have their body enclosed in parenthesis,
+it easier to parse and also made possible to have if/while/for statements that were single lines. I do not 
+like the idea of if statements that don't have their body enclosed in parenthesis,
 as that style often leads to bugs. Most style checkers for languages that allow that syntax
-will flag the use of that style, so why propagate such a thing?
+will flag the use of that style, so why propagate such a thing? 
 
 Languages like Groovy and JavaScript don't require semicolons, but you still need them from
 time-to-time. In JavaScript's case, you can treat anything like a function you can also have lines like this:
@@ -178,12 +177,40 @@ Putting the newline there would cause the parser to loose it on you. Who even wr
 don't do that. Newlines before or after boolean operators, or inside of parenthetical clauses, are
 all fine. Put a newline in a place that would make the code ambiguous and we're not fine.
 
+After more thought, I decided to allow semicolons as optional line endings, not because I think they
+are a syntactical requirement, because I think we can avoid that, but because from an ergonomics perspective
+if somebody feels more productive or prefers that code style, it costs very little to accommodate their
+style. Semicolons won't be considered idiomatic.
+
 Dog way:
 ```
   if u == 10 {
     y.do_something()
   }
   x.do_other_thing()
+```
+## Colon vs Equal
+
+When it comes to assigning values during construction of a struct, we could use colons or equals:
+```
+    let mystruct = MyStruct {
+        prop1 = 'val'
+    }
+```
+or with colon
+```
+    let mystruct = MyStruct {
+        prop1: 'val'
+    }
+```
+
+The colon looks neat and is very similar to the JSON syntax. There is no penalty to supporting both syntaxes, but
+we'll pick the colon as the idiomatic approach.
+
+```
+    let mystruct = MyStruct {
+        prop1: 'val'
+    }
 ```
 
 ## Curly brackets
@@ -285,6 +312,81 @@ want to do it at the expense of functionality.
   }
        
   do_something_new()
+```
+## Single or Double Quotes
+
+Different languages use either single or double quotes around strings and characters. 
+
+Java, C, and others will use single quotes around characters and double quotes around strings.
+```Java
+    char c = 'a';
+    String string = "string";
+    
+```
+
+Python has no concept of a char. Something is a string or it isn't, and it will let you use single or double quotes.
+```Python
+    c = 'a'
+    string = 'string'
+    another_string = "this is also a string"
+    another_c = "a"
+```
+
+Where things get more interesting is with embedding quotes within your strings or characters.
+
+Java needs escaping fairly often:
+```Java
+    char single_quote = '\''; 
+    String string = "I asked, \"How are you?\"";  
+```
+
+Python can often avoid escaping by simply using the appropriate enclosing quote:
+```Python
+    single_quote = "'";
+    string = 'I asked, "How are you?"';
+```
+
+From a purely aesthetic perspective, single quotes are less noisy than double quotes. (I know, this is subjective. 
+So, fight me.) And being able to pick either a single quote or a double quote as needed allows you to forgo escaping
+in many cases.
+
+From a technical perspective, the char data type exists to declare expectations (this will only be 1 character long) 
+and more importantly, to save memory. Strings simply have much more overhead associated with them because even when
+they hold one character they are still an array and a length.
+
+On the whole strings are much more common in day-to-day programming and chars are largely used when we get into the 
+nitty-gritty. Nobody moving data from databases or from files is using a char data type very often.
+
+So, even though this is controversial to me, I've decided to support the Python approach of allowing either a single
+or double quote. 
+
+What does this mean for the char data type? It is still there and fine. Most of the time, we can infer whether a 
+piece of text is a string or char, but in rare cases the compiler can't infer it, the developer can cast the value.
+
+Simple Rules:
+* The char data type cannot have more than one character
+* Compiler will default to a char data type if it cannot infer the data type, because a char can be cast to a 
+string later and a char uses less memory
+
+## Multiline strings
+
+I see no good argument against multi-line strings. 
+
+The only nuance is the embedding of the \r character, which Dog will strip, so that newlines are always
+represented as \n. In the rare case you need both \r\n, then you can explicitly put them in and not use
+multi-line strings, or use them and then do a replace. In most cases, a \n works fine, even on Windows
+for console output.
+
+For file output, specify your preference with a file encoder to translate \n into \r\n if you want 
+the file to be Windows specific when you write it.
+
+Dog strings are inherently multi-line.
+```
+    let my_multi_line_string = "
+This is a great line of text.
+This is another one.
+Scott hates multi-line strings.
+Erik thinks he is crazy."    
 ```
 
 ## Keywords
@@ -551,8 +653,8 @@ Constants need to be evaluated at compile-time for two reasons:
 There is only one way to initialize a structure:
 ```
   let a: MyStruct = MyStruct {
-    prop1 = 0
-    prop2 = "hi"
+    prop1: 0
+    prop2: 'hi'
   }
 ```
 When you create it, you have to set every property on it, no exceptions. This makes the creation explict and obvious.
@@ -567,8 +669,8 @@ pub struct MyStruct {
 impl MyStruct {
   pub const fn new(): MyStruct {
     return MyStruct {
-      prop1 = 0
-      prop2 = "hi"
+      prop1: 0
+      prop2: 'hi'
     }
   }
 }
@@ -685,13 +787,13 @@ The otherwise block can make your code look cleaner when values are expected to 
 time. See below for an example.
 ```
 fn will_fail() {
-  fail("I don't need a reason, but I'll give you one.")
+  fail('I don't need a reason, but I'll give you one.')
 }
 
   ...
 
   will_fail() otherwise {
-    println("We ignored the failure.")
+    println('We ignored the failure.')
   } 
   
   {
@@ -699,7 +801,7 @@ fn will_fail() {
     will_fail()
     // do more things
   } otherwise {
-    println("We ignored the failure.")
+    println('We ignored the failure.')
   }
 ```
 
@@ -790,12 +892,12 @@ would change how the code compiles in a way you couldn't do at compile time.
 Without a keyword we could do:
 ```
     // this can be optimized by a keyword, but would work without one
-    log(debug, "this is a debug message.")
+    log(debug, 'this is a debug message.')
     
     // one could use a lambda even if we didn't have a keyword:
     log(debug_io, || -> {
         let x: int = some_calculation()
-        return "hear me: " + x 
+        return 'hear me: ' + x 
     })
 ```
 With a keyword we could do:
@@ -803,10 +905,10 @@ With a keyword we could do:
     // however maybe a syntax like this?
     log.debug_io {
         let x: int = some_calculation()
-        return "hear me: " + x 
+        return 'hear me: ' + x 
     }
     // and
-    log.debug("this is a debug message.") 
+    log.debug('this is a debug message.') 
 ```
 
 I'll think on it a little more. The drawback to a keyword like `log` is largely
@@ -835,7 +937,7 @@ fn my_fun() {
     }
     
     // I don't like this syntax, but some sort of conditional check on a config value:
-    config(server_name == "hal" && !local) {
+    config(server_name == 'hal' && !local) {
         // do code specific to local  
     }
 }

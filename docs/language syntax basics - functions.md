@@ -53,8 +53,8 @@ fn my_func1(a: int, b: MyStruct, c: mut MyStruct) {
     change_my_struct( c ) // success: c is mutable
     
     let d: mut MyStruct = MyStruct {
-        prop1 = 12 // success: we can always set a property during construction
-        prop2 = 15 // success: we can always set a property during construction
+        prop1: 12 // success: we can always set a property during construction
+        prop2: 15 // success: we can always set a property during construction
     }
     
     d.prop1 = 10 // success: d and prop1 are mutable
@@ -87,8 +87,8 @@ table. TBD!
 // this function takes an array of Varargs
 fn my_func(my_arg: Vararg...) { // Vararg... is the same as [Vararg], just syntactical sugar to remind us
     for arg in my_arg {
-        println("My type is: {}", x.type_name()) // name of the type passed in 
-        println("My value is: {}", x.as_string()) // there are a number of as_* methods to cast the arg
+        println('My type is: {}', x.type_name()) // name of the type passed in 
+        println('My value is: {}', x.as_string()) // there are a number of as_* methods to cast the arg
     }
 }
 
