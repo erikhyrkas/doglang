@@ -15,6 +15,10 @@ the chicken comes first, then the egg, and then the new chicken.
 * Install CLion [CLion setup](clion%20setup.md)
 * Clone: https://github.com/erikhyrkas/doglang.git
 
+Read the docs:
+
+[Dog docs](https://github.com/erikhyrkas/doglang/blob/main/docs/README.md)
+
 ## Helpful links
 Rust:
 * https://doc.rust-lang.org/rust-by-example/index.html
