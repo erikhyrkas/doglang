@@ -46,7 +46,7 @@ fn compute(values: [int]): int {
 app Compute() {
     let value1: string = requestValue()
     let value2: string = requestValue()
-    let result: int = compute( (int or 0) value1, (int or 0) value2 )
+    let result: int = compute( value1 as int otherwise 0, value2 as int otherwise 0)
     println('Your result is {}', result)
     if result == 42 {
         println('You win!')

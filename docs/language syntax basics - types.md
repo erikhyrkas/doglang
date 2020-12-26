@@ -53,6 +53,15 @@ Dog will automatically dereference x, but you can also test it against null.
     let q: f32 = v as f32 // losing precision, must be explicit
 ```
 
+Cast otherwise is a syntax that allows you to handle the situation where a variable cannot be cast,
+so you want a default.
+```    
+    let my_string: "I'm not a number"
+    let my_num: 42
+    let result = num_num + my_string as int otherwise 0
+    println('Result is: {}`, result) // 42 because 42 + 0  
+```
+
 ## Common Collections
 
 Common collections
