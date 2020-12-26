@@ -56,6 +56,8 @@ mod parse_rules;
 // that also performs well and doesn't require unreusable code. The table lookup method is more
 // or less creating our own, slower, weak reference.
 
+// todo: right now, this is only using the dog grammar, but we need to add a function or enum
+// that supports the SQL grammar.
 pub fn parse(mut token_stream: Box<TokenStream>, file_name: Option<&str>, file_path: Option<&str>) -> Option<Box<ParseModel>> {
     let real_file_name = String::from(file_name.unwrap_or(UNKNOWN));
     let real_file_path = String::from(file_path.unwrap_or(UNKNOWN));
@@ -65,6 +67,7 @@ pub fn parse(mut token_stream: Box<TokenStream>, file_name: Option<&str>, file_p
 
     if let Some(result) = match_document(&mut token_stream) {
         if !token_stream.has_next() {
+            println!("Parsed successfully: {} ({})", real_file_name, real_file_path);
             return Some(Box::new(result));
         }
         if let Some(last_consumed) = token_stream.last_consumed() {

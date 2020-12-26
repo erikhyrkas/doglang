@@ -24,107 +24,106 @@ pub fn get_patterns() -> &'static Vec<Pattern> {
 unsafe fn build_patterns() {
     // these patterns are in order of precedence from highest to lowest
 
-    PATTERNS.push(build_keyword("log", "log"));
+    PATTERNS.push(build_keyword("_log", "log"));
 
     // assignment
-    PATTERNS.push(build_keyword("let", "let"));
+    PATTERNS.push(build_keyword("_let", "let"));
 
     // flow control
-    PATTERNS.push(build_keyword("return", "return"));
-    PATTERNS.push(build_keyword("if", "if"));
-    PATTERNS.push(build_keyword("else", "else"));
-    PATTERNS.push(build_keyword("switch", "switch"));
-    PATTERNS.push(build_keyword("case", "case"));
-    PATTERNS.push(build_keyword("default", "default"));
-    PATTERNS.push(build_keyword("fail", "fail"));
-    PATTERNS.push(build_keyword("otherwise", "otherwise"));
-    PATTERNS.push(build_keyword("for", "for"));
-    PATTERNS.push(build_keyword("in", "in"));
-    PATTERNS.push(build_keyword("while", "while"));
-    PATTERNS.push(build_keyword("break", "break"));
-    PATTERNS.push(build_keyword("continue", "continue"));
-    PATTERNS.push(build_keyword("with", "with")); // syntactical sugar to acquire/release resources
+    PATTERNS.push(build_keyword("_return", "return"));
+    PATTERNS.push(build_keyword("_if", "if"));
+    PATTERNS.push(build_keyword("_else", "else"));
+    PATTERNS.push(build_keyword("_switch", "switch"));
+    PATTERNS.push(build_keyword("_case", "case"));
+    PATTERNS.push(build_keyword("_default", "default"));
+    PATTERNS.push(build_keyword("_fail", "fail"));
+    PATTERNS.push(build_keyword("_otherwise", "otherwise"));
+    PATTERNS.push(build_keyword("_for", "for"));
+    PATTERNS.push(build_keyword("_in", "in"));
+    PATTERNS.push(build_keyword("_while", "while"));
+    PATTERNS.push(build_keyword("_break", "break"));
+    PATTERNS.push(build_keyword("_continue", "continue"));
+    PATTERNS.push(build_keyword("_with", "with")); // syntactical sugar to acquire/release resources
 
     // entry points
-    PATTERNS.push(build_keyword("app", "app"));
-    PATTERNS.push(build_keyword("lib", "lib"));
-    PATTERNS.push(build_keyword("ui", "ui")); // reserving for now, even though we may not implement
-    PATTERNS.push(build_keyword("service", "service"));
-    PATTERNS.push(build_keyword("test", "test"));
+    PATTERNS.push(build_keyword("_app", "app"));
+    PATTERNS.push(build_keyword("_lib", "lib"));
+    PATTERNS.push(build_keyword("_ui", "ui")); // reserving for now, even though we may not implement
+    PATTERNS.push(build_keyword("_service", "service"));
+    PATTERNS.push(build_keyword("_test", "test"));
 
     // blocks
-    PATTERNS.push(build_keyword("config", "config"));
-    PATTERNS.push(build_keyword("function", "fn"));
-    PATTERNS.push(build_keyword("struct", "struct"));
-    PATTERNS.push(build_keyword("enum", "enum"));
-    PATTERNS.push(build_keyword("trait", "trait"));
-    PATTERNS.push(build_keyword("impl", "impl"));
-    PATTERNS.push(build_keyword("attribute", "attr")); // java annotation/rust attribute
+    PATTERNS.push(build_keyword("_config", "config"));
+    PATTERNS.push(build_keyword("_function", "fn"));
+    PATTERNS.push(build_keyword("_struct", "struct"));
+    PATTERNS.push(build_keyword("_enum", "enum"));
+    PATTERNS.push(build_keyword("_trait", "trait"));
+    PATTERNS.push(build_keyword("_impl", "impl"));
+    PATTERNS.push(build_keyword("_attribute", "attr")); // java annotation/rust attribute
 
     // qualifiers
-    PATTERNS.push(build_keyword("self", "self"));
-    PATTERNS.push(build_keyword("public", "pub"));
-    PATTERNS.push(build_keyword("mutable", "mut"));
-    PATTERNS.push(build_keyword("constant", "const"));
+    PATTERNS.push(build_keyword("_self", "self"));
+    PATTERNS.push(build_keyword("_public", "pub"));
+    PATTERNS.push(build_keyword("_mutable", "mut"));
+    PATTERNS.push(build_keyword("_constant", "const"));
     //PATTERNS.push(build_keyword("reference", "ref"));
-    PATTERNS.push(build_keyword("unsafe", "unsafe"));
+    PATTERNS.push(build_keyword("_unsafe", "unsafe"));
 
     // scope
-    PATTERNS.push(build_keyword("use", "use")); // use [external library name::]<module name>::<submodule name>[::func] as name
-    PATTERNS.push(build_keyword("as", "as")); // use [external library name::]<module name>::<submodule name>::global_var as name
-    PATTERNS.push(build_keyword("module", "mod")); // mod [[module name]::[submodulename]] [(os: "windows", arch: "x86")]
+    PATTERNS.push(build_keyword("_use", "use")); // use [external library name::]<module name>::<submodule name>[::func] as name
+    PATTERNS.push(build_keyword("_as", "as")); // use [external library name::]<module name>::<submodule name>::global_var as name
+    PATTERNS.push(build_keyword("_module", "mod")); // mod [[module name]::[submodulename]] [(os: "windows", arch: "x86")]
 
     // types
-    //PATTERNS.push(build_keyword("string", "str")); // we'll use a struct/trait for this
-    PATTERNS.push(build_keyword("unsigned integer", "uint"));
-    PATTERNS.push(build_keyword("integer", "int"));
-    PATTERNS.push(build_keyword("float", "float"));
-    PATTERNS.push(build_keyword("boolean", "bool"));
-    PATTERNS.push(build_keyword("character", "char"));
+    PATTERNS.push(build_keyword("_unsigned_integer", "uint"));
+    PATTERNS.push(build_keyword("_integer", "int"));
+    PATTERNS.push(build_keyword("_float", "float"));
+    PATTERNS.push(build_keyword("_boolean", "bool"));
+    PATTERNS.push(build_keyword("_character", "char"));
 
-    PATTERNS.push(build_keyword("false", "false"));
-    PATTERNS.push(build_keyword("true", "true"));
-    PATTERNS.push(build_keyword("null", "null"));
+    PATTERNS.push(build_keyword("_false", "false"));
+    PATTERNS.push(build_keyword("_true", "true"));
+    PATTERNS.push(build_keyword("_null", "null"));
 
-    PATTERNS.push(build_keyword("f32", "f32"));
-    PATTERNS.push(build_keyword("f64", "f64"));
-    PATTERNS.push(build_keyword("i8", "i8"));
-    PATTERNS.push(build_keyword("i16", "i16"));
-    PATTERNS.push(build_keyword("i32", "i32"));
-    PATTERNS.push(build_keyword("i64", "i64"));
-    PATTERNS.push(build_keyword("u8", "u8"));
-    PATTERNS.push(build_keyword("u16", "u16"));
-    PATTERNS.push(build_keyword("u32", "u32"));
-    PATTERNS.push(build_keyword("u64", "u64"));
+    PATTERNS.push(build_keyword("_f32", "f32"));
+    PATTERNS.push(build_keyword("_f64", "f64"));
+    PATTERNS.push(build_keyword("_i8", "i8"));
+    PATTERNS.push(build_keyword("_i16", "i16"));
+    PATTERNS.push(build_keyword("_i32", "i32"));
+    PATTERNS.push(build_keyword("_i64", "i64"));
+    PATTERNS.push(build_keyword("_u8", "u8"));
+    PATTERNS.push(build_keyword("_u16", "u16"));
+    PATTERNS.push(build_keyword("_u32", "u32"));
+    PATTERNS.push(build_keyword("_u64", "u64"));
 
     // building block patterns
     PATTERNS.push(build_comment());
+    PATTERNS.push(build_sql_string());
     PATTERNS.push(build_quoted_string());
-    PATTERNS.push(build_quoted_char());
     PATTERNS.push(build_number());
     PATTERNS.push(build_word());
 
     // symbols
-    PATTERNS.push(build_named_character("open_curly", '{'));
-    PATTERNS.push(build_named_character("close_curly", '}'));
-    PATTERNS.push(build_named_character("comma", ','));
-    PATTERNS.push(build_named_character("equal", '='));
-    PATTERNS.push(build_named_character("greater", '>'));
-    PATTERNS.push(build_named_character("less", '<'));
-    PATTERNS.push(build_named_character("plus", '+'));
-    PATTERNS.push(build_named_character("minus", '-'));
-    PATTERNS.push(build_named_character("star", '*'));
-    PATTERNS.push(build_named_character("period", '.'));
-    PATTERNS.push(build_named_character("slash", '/'));
-    PATTERNS.push(build_named_character("hash", '#'));
-    PATTERNS.push(build_named_character("open_paren", '('));
-    PATTERNS.push(build_named_character("close_paren", ')'));
-    PATTERNS.push(build_named_character("open_bracket", '['));
-    PATTERNS.push(build_named_character("close_bracket", ']'));
-    PATTERNS.push(build_named_character("exclamation", '!'));
-    PATTERNS.push(build_named_character("question_mark", '?'));
-    PATTERNS.push(build_named_character("colon", ':'));
-    PATTERNS.push(build_named_character("pipe", '|'));
+    PATTERNS.push(build_named_character("_open_curly", '{'));
+    PATTERNS.push(build_named_character("_close_curly", '}'));
+    PATTERNS.push(build_named_character("_comma", ','));
+    PATTERNS.push(build_named_character("_equal", '='));
+    PATTERNS.push(build_named_character("_greater", '>'));
+    PATTERNS.push(build_named_character("_less", '<'));
+    PATTERNS.push(build_named_character("_plus", '+'));
+    PATTERNS.push(build_named_character("_minus", '-'));
+    PATTERNS.push(build_named_character("_star", '*'));
+    PATTERNS.push(build_named_character("_period", '.'));
+    PATTERNS.push(build_named_character("_slash", '/'));
+    PATTERNS.push(build_named_character("_hash", '#'));
+    PATTERNS.push(build_named_character("_open_paren", '('));
+    PATTERNS.push(build_named_character("_close_paren", ')'));
+    PATTERNS.push(build_named_character("_open_bracket", '['));
+    PATTERNS.push(build_named_character("_close_bracket", ']'));
+    PATTERNS.push(build_named_character("_exclamation", '!'));
+    PATTERNS.push(build_named_character("_question_mark", '?'));
+    PATTERNS.push(build_named_character("_colon", ':'));
+    PATTERNS.push(build_named_character("_pipe", '|'));
 
     // whitespace
     PATTERNS.push(newline());
@@ -143,7 +142,7 @@ fn build_keyword(name: &str, text: &str) -> Pattern {
 
 fn build_comment() -> Pattern {
     return Pattern {
-        label: "comment".to_string(),
+        label: "_comment".to_string(),
         pattern_group: Box::new(AndGroup {
             groups: vec![
                 Box::new(CharacterRange {
@@ -168,14 +167,16 @@ fn build_comment() -> Pattern {
     };
 }
 
-fn build_quoted_string() -> Pattern {
+
+fn build_sql_string() -> Pattern {
     return Pattern {
-        label: "string".to_string(),
-        pattern_group: Box::new(AndGroup {
+        label: "_sql".to_string(),
+        pattern_group:
+        Box::new(AndGroup {
             groups: vec![
                 Box::new(CharacterRange {
-                    match_start_char: '"',
-                    match_end_char: '"',
+                    match_start_char: '`',
+                    match_end_char: '`',
                 }),
                 Box::new(GroupRepeats {
                     match_repeats: MatchRepeats::ZeroOrMore,
@@ -183,14 +184,14 @@ fn build_quoted_string() -> Pattern {
                         groups: vec![
                             Box::new(AnyChar {}),
                             Box::new(TextPattern {
-                                match_text: "\\\"".to_string()
+                                match_text: "\\`".to_string()
                             })
                         ]
                     }),
                 }),
                 Box::new(CharacterRange {
-                    match_start_char: '"',
-                    match_end_char: '"',
+                    match_start_char: '`',
+                    match_end_char: '`',
                 }),
             ]
         }),
@@ -198,26 +199,57 @@ fn build_quoted_string() -> Pattern {
     };
 }
 
-fn build_quoted_char() -> Pattern {
+fn build_quoted_string() -> Pattern {
     return Pattern {
-        label: "char".to_string(),
-        pattern_group: Box::new(AndGroup {
+        label: "_string_literal".to_string(),
+        pattern_group:
+        Box::new(OrGroup {
             groups: vec![
-                Box::new(CharacterRange {
-                    match_start_char: '\'',
-                    match_end_char: '\'',
+                Box::new(AndGroup {
+                    groups: vec![
+                        Box::new(CharacterRange {
+                            match_start_char: '"',
+                            match_end_char: '"',
+                        }),
+                        Box::new(GroupRepeats {
+                            match_repeats: MatchRepeats::ZeroOrMore,
+                            group: Box::new(OrGroup {
+                                groups: vec![
+                                    Box::new(AnyChar {}),
+                                    Box::new(TextPattern {
+                                        match_text: "\\\"".to_string()
+                                    })
+                                ]
+                            }),
+                        }),
+                        Box::new(CharacterRange {
+                            match_start_char: '"',
+                            match_end_char: '"',
+                        }),
+                    ]
                 }),
-                Box::new(GroupRepeats {
-                    match_repeats: MatchRepeats::ZeroOrOne,
-                    group: Box::new(CharacterRange {
-                        match_start_char: '\\',
-                        match_end_char: '\\',
-                    }),
-                }),
-                Box::new(AnyChar {}),
-                Box::new(CharacterRange {
-                    match_start_char: '\'',
-                    match_end_char: '\'',
+                Box::new(AndGroup {
+                    groups: vec![
+                        Box::new(CharacterRange {
+                            match_start_char: '\'',
+                            match_end_char: '\'',
+                        }),
+                        Box::new(GroupRepeats {
+                            match_repeats: MatchRepeats::ZeroOrMore,
+                            group: Box::new(OrGroup {
+                                groups: vec![
+                                    Box::new(AnyChar {}),
+                                    Box::new(TextPattern {
+                                        match_text: "\\\'".to_string()
+                                    })
+                                ]
+                            }),
+                        }),
+                        Box::new(CharacterRange {
+                            match_start_char: '\'',
+                            match_end_char: '\'',
+                        }),
+                    ]
                 }),
             ]
         }),
@@ -241,7 +273,7 @@ fn build_number() -> Pattern {
     }));
 
     return Pattern {
-        label: "number".to_string(),
+        label: "_number_literal".to_string(),
         pattern_group: Box::new(OrGroup {
             groups: vec![
                 Box::new(AndGroup {
@@ -321,13 +353,17 @@ fn build_word() -> Pattern {
         match_start_char: '0',
         match_end_char: '9',
     }));
+    body_patterns.push(Box::new(CharacterRange {
+        match_start_char: '_',
+        match_end_char: '_',
+    }));
 
     return build_pattern(first_character_pattern, body_patterns);
 }
 
 pub fn build_pattern(first_character_pattern: Vec<Box<dyn Group>>, body_patterns: Vec<Box<dyn Group>>) -> Pattern {
     return Pattern {
-        label: "word".to_string(),
+        label: "_word".to_string(),
         pattern_group: Box::new(AndGroup {
             groups: vec![
                 Box::new(OrGroup {
@@ -358,7 +394,7 @@ fn build_named_character(label: &str, c: char) -> Pattern {
 
 fn newline() -> Pattern {
     return Pattern {
-        label: "end_of_line".to_string(),
+        label: "_end_of_line".to_string(),
         pattern_group: Box::new(CharacterRange {
             match_start_char: '\n',
             match_end_char: '\n',
@@ -369,7 +405,7 @@ fn newline() -> Pattern {
 
 fn whitespace() -> Pattern {
     return Pattern {
-        label: "whitespace".to_string(),
+        label: "_whitespace".to_string(),
         pattern_group: Box::new(GroupRepeats {
             match_repeats: MatchRepeats::OneOrMore,
             group: Box::new(OrGroup {

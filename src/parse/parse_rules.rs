@@ -218,37 +218,46 @@ fn build_rules() -> Option<HashMap<&'static str, Box<RuleStruct>>> {
     let mut result: HashMap<&'static str, Box<RuleStruct>> = HashMap::new();
 
 
-    result.insert("open_curly", create_label_match(vec!["open_curly"]));
-    result.insert("close_curly", create_label_match(vec!["close_curly"]));
-    result.insert("open_paren", create_label_match(vec!["open_paren"]));
-    result.insert("close_paren", create_label_match(vec!["close_paren"]));
-    result.insert("period", create_label_match(vec!["period"]));
-    result.insert("comma", create_label_match(vec!["comma"]));
+    result.insert("open_curly", create_label_match(vec!["_open_curly"]));
+    result.insert("close_curly", create_label_match(vec!["_close_curly"]));
+    result.insert("open_paren", create_label_match(vec!["_open_paren"]));
+    result.insert("close_paren", create_label_match(vec!["_close_paren"]));
+    result.insert("period", create_label_match(vec!["_period"]));
+    result.insert("comma", create_label_match(vec!["_comma"]));
 
-    result.insert("config_word", create_label_match(vec!["config"]));
-    result.insert("app", create_label_match(vec!["app"]));
-    result.insert("identifier", create_label_match(vec!["word"]));
-    result.insert("string_literal", create_label_match(vec!["string"]));
+    result.insert("config_word", create_label_match(vec!["_config"]));
+    result.insert("app", create_label_match(vec!["_app"]));
+    result.insert("identifier", create_label_match(vec!["_word"]));
+    result.insert("string_literal", create_label_match(vec!["_string_literal"]));
 
-    result.insert("expression", create_and_rule(RuleRepeats::Once, vec!["string_literal"])); // todo
+    result.insert("expression", create_and_rule_once( vec!["string_literal"])); // todo
 
-    result.insert("param", create_and_rule(RuleRepeats::Once, vec!["expression", "next_param"]));
+    result.insert("param", create_and_rule_once( vec!["expression", "next_param"]));
     result.insert("next_param", create_and_rule(RuleRepeats::ZeroOrMore, vec!["comma", "expression"]));
     result.insert("optional_params", create_and_rule(RuleRepeats::ZeroOrOne, vec!["param"]));
 
-    result.insert("simple_identifier", create_or_rule(vec!["identifier", "config_word"])); // todo: primitive types here?
+    result.insert("simple_identifier", create_or_rule_once(vec!["identifier", "config_word"])); // todo: primitive types here?
     result.insert("next_identifier", create_and_rule(RuleRepeats::ZeroOrMore, vec!["period", "identifier"])); // todo: maybe exclamation too?
-    result.insert("qualified_identifier", create_and_rule(RuleRepeats::Once, vec!["simple_identifier", "next_identifier"]));
+    result.insert("qualified_identifier", create_and_rule_once( vec!["simple_identifier", "next_identifier"]));
 
-    result.insert("function_invocation", create_and_rule(RuleRepeats::Once, vec!["qualified_identifier", "open_paren", "optional_params", "close_paren"]));
-    result.insert("simple_statement", create_and_rule(RuleRepeats::Once, vec!["function_invocation"]));
-    result.insert("statement", create_or_rule(vec!["block", "simple_statement"]));
+    result.insert("function_invocation", create_and_rule_once( vec!["qualified_identifier", "open_paren", "optional_params", "close_paren"]));
+    result.insert("simple_statement", create_and_rule_once( vec!["function_invocation"]));
+    result.insert("statement", create_or_rule_once(vec!["block", "simple_statement"]));
     result.insert("statements", create_and_rule(RuleRepeats::ZeroOrMore, vec!["statement"]));
-    result.insert("block", create_and_rule(RuleRepeats::Once, vec!["open_curly", "statements", "close_curly"]));
-    result.insert("app_decl", create_and_rule(RuleRepeats::Once, vec!["app", "identifier", "open_paren", "close_paren", "block"]));
-    result.insert("document", create_or_rule(vec!["app_decl"]));
+    result.insert("block", create_and_rule_once( vec!["open_curly", "statements", "close_curly"]));
+    result.insert("app_decl", create_and_rule_once(vec!["app", "identifier", "open_paren", "close_paren", "block"]));
+    result.insert("document", create_or_rule_once(vec!["app_decl"]));
 
     return Some(result);
+}
+
+fn create_and_rule_once( children: Vec<&'static str>) -> Box<RuleStruct> {
+    Box::new(RuleStruct {
+        rule_type: RuleType::And,
+        repeat: RuleRepeats::Once,
+        children,
+        match_labels: vec![],
+    })
 }
 
 fn create_and_rule(repeat: RuleRepeats, children: Vec<&'static str>) -> Box<RuleStruct> {
@@ -260,7 +269,19 @@ fn create_and_rule(repeat: RuleRepeats, children: Vec<&'static str>) -> Box<Rule
     })
 }
 
-fn create_or_rule(children: Vec<&'static str>) -> Box<RuleStruct> {
+#[allow(dead_code)]
+fn create_or_rule(repeat: RuleRepeats, children: Vec<&'static str>) -> Box<RuleStruct> {
+    Box::new(
+        RuleStruct {
+            rule_type: RuleType::Or,
+            repeat,
+            children,
+            match_labels: vec![],
+        }
+    )
+}
+
+fn create_or_rule_once(children: Vec<&'static str>) -> Box<RuleStruct> {
     Box::new(
         RuleStruct {
             rule_type: RuleType::Or,
@@ -282,96 +303,3 @@ fn create_label_match(match_labels: Vec<&'static str>) -> Box<RuleStruct> {
     )
 }
 
-
-/*
-struct PrimeRule {
-    rules: HashMap<&'static str, &'static Box<RuleStruct>>,
-}
-
-impl PrimeRule {
-    pub fn get_prime_rule(&self) -> Option<&'static Box<dyn Rule>> {
-        return RULES.get("document");
-    }
-
-    pub fn get_rule(&self, name: &str) -> Option<&'static Box<dyn Rule>> {
-        return RULES.get(name);
-    }
-
-    fn build_rules() -> HashMap<&'static str, &'static Box<dyn Rule>> {
-        let block_rules: Vec<Rc<RefCell<dyn Rule>>> = vec![];
-        let block = Rc::new(RefCell::new(AndRule {
-            label: "block".to_string(),
-            rules: block_rules,
-        }));
-
-        let open_paren = create_token_rule("open_paren");
-        let close_paren = create_token_rule("close_paren");
-        let open_curly = create_token_rule("open_curly");
-        let close_curly = create_token_rule("close_curly");
-
-        let application_word = create_token_rule("app");
-
-        let identifier = create_token_rule_with_tokens("identifier", vec!["word".to_string()]);
-
-
-        let mut block_ref = &block;
-
-        let statement: Rc<RefCell<dyn Rule>> = Rc::new(RefCell::new(AndRule {
-            label: "statement".to_string(),
-            rules: vec![
-                Rc::new(RefCell::new(OrRule {
-                    rules: vec![
-                        block.clone()
-                    ]
-                }))
-            ],
-        }));
-
-        block_ref.borrow().rules.push(open_curly);
-        block_ref.borrow().rules.push(
-            Rc::new(RefCell::new(RepeatRule {
-                label: "statements".to_string(),
-                rule: statement,
-                minimum: 0,
-            })));
-        block_ref.borrow().rules.push(close_curly);
-
-
-        let application_rule = Rc::new(RefCell::new(AndRule {
-            label: "app".to_string(),
-            rules: vec![application_word, identifier, open_paren, close_paren, block],
-        }));
-
-        let prime_rule = Some(Rc::new(RefCell::new(AndRule {
-            label: "document".to_string(),
-            rules: vec![
-                Rc::new(RefCell::new(OrRule {
-                    rules: vec![
-                        application_rule
-                    ]
-                }))
-            ],
-        })));
-        println!("Prime Rule created");
-        return prime_rule;
-    }
-
-    fn create_token_rule(label: &str) -> Rc<RefCell<TokenRule>> {
-        return Rc::new(RefCell::new(TokenRule {
-            label: label.to_string(),
-            token_matcher: Box::new(LabelTokenMatcher {
-                tokens: vec![label.to_string()]
-            }),
-        }));
-    }
-
-    fn create_token_rule_with_tokens(label: &str, tokens: Vec<String>) -> Rc<RefCell<TokenRule>> {
-        return Rc::new(RefCell::new(TokenRule {
-            label: label.to_string(),
-            token_matcher: Box::new(LabelTokenMatcher {
-                tokens
-            }),
-        }));
-    }
-}
-*/

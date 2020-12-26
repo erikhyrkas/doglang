@@ -4,13 +4,13 @@ use std::path::Path;
 
 const APP_CONFIG: &'static str = "
 config Release {
-    version: string = \"1.0.0\"
+    version: string = '1.0.0'
 }
 ";
 
 const APP_MAIN: &'static str = "
 app HelloWorld() {
-  println(\"Hello world!\")
+  println('Hello world!')
 }
 ";
 

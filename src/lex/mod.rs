@@ -28,6 +28,8 @@ mod character_range;
 mod any_char;
 mod group;
 
+// todo: right now, this is only using the dog grammar, but we need to add a function or enum
+// that supports the SQL grammar.
 pub fn lex(dog_code: &str, file_name: Option<&str>, file_path: Option<&str>) -> Option<Box<TokenStream>> {
     let real_file_name = String::from(file_name.unwrap_or(UNKNOWN));
     let real_file_path = String::from(file_path.unwrap_or(UNKNOWN));
