@@ -438,6 +438,11 @@ attribute tag though, it's not technical an official keyword, but it more or les
 purpose and takes up as much brain space. You need to somehow tell Dog that this is the entry point
 for an app, and I think that fewer symbols is better from neatness perspective.
 
+What is more, by using keywords, we are communicating that this is an important feature of the language
+and not just an afterthought or a bolt-on. A low level language is extremely minimal in keywords and
+forces the developer to know patterns. A high level language like Dog wants to create clear and easy
+ways of doing common tasks that also read without difficulty.
+
 The Dog way:
 ```
 app MyApp() {
@@ -945,3 +950,50 @@ fn my_fun() {
 
 There's some risks associated with changing what is compiled, but if we treat variables declared within the scope as 
 local to that scope, then it shouldn't prevent any given config permutation from compiling.
+
+## Embedded Modules
+For Dog, normally a module is everything in the same directory and it gets its module name from the directory path 
+relative to the config definition.
+
+However, you can declare that a file has a different module or you can define a part of a file to have a different 
+module. This is useful for embedding tests near the source code.
+
+For example:
+```
+//... somewhere after the code in the current file...
+
+test mod my_module_tests {
+    // use statements
+    // this module can see private members of parent module
+
+    test fn my_test_function() {
+        //... test code above.
+    }
+
+}
+
+```
+
+## Why is 'fail' a keyword?
+
+Fail could just be a function, so why is it a keyword?
+
+Currently, the syntax isn't very exotic. You simply do:
+```
+    fail('Any reason I want to print')
+```
+
+This could be a function in `std` that then calls into `internal` that in turn raises an exception. However, here's the
+catch, how does it raise an exception? It needs the compiler to do it, because how exceptions are implemented are 
+specific to the compiler. So, the only way for it to raise the exception that acknowledges compiler magic is to have a 
+keyword, and so, here we are. 
+
+Sure, we could not make it a keyword and when we see a function named `fail()` we could instead do the same thing, but 
+I think that it is better to be apparent when we are doing compiler magic. In this way, anybody can easily trace back
+what is happening in their code all the way to the internal modules to see exactly how the language works. When it is a
+keyword, they know they won't find the logic in a module, but in the compiler itself, which they are free to look at
+and now know where to start.
+
+This sort of transparency may help other people who are writing their own programming languages understand how functionality
+like this is implemented without being led on a wild goose chase through internal libraries only to see some other 
+obscure way of communicating with the compiler.
