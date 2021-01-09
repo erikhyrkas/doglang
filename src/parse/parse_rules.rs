@@ -217,7 +217,7 @@ unsafe fn and_match_with(label: &str, rule_struct: &RuleStruct, token_stream: &m
 fn build_rules() -> Option<HashMap<&'static str, Box<RuleStruct>>> {
     let mut result: HashMap<&'static str, Box<RuleStruct>> = HashMap::new();
 
-
+    result.insert("function", create_label_match(vec!["_function"]));
     result.insert("open_curly", create_label_match(vec!["_open_curly"]));
     result.insert("close_curly", create_label_match(vec!["_close_curly"]));
     result.insert("open_paren", create_label_match(vec!["_open_paren"]));
@@ -245,7 +245,7 @@ fn build_rules() -> Option<HashMap<&'static str, Box<RuleStruct>>> {
     result.insert("statement", create_or_rule_once(vec!["block", "simple_statement"]));
     result.insert("statements", create_and_rule(RuleRepeats::ZeroOrMore, vec!["statement"]));
     result.insert("block", create_and_rule_once( vec!["open_curly", "statements", "close_curly"]));
-    result.insert("app_decl", create_and_rule_once(vec!["app", "identifier", "open_paren", "close_paren", "block"]));
+    result.insert("app_decl", create_and_rule_once(vec!["app", "function", "identifier", "open_paren", "close_paren", "block"]));
     result.insert("document", create_or_rule_once(vec!["app_decl"]));
 
     return Some(result);
