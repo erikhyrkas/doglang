@@ -132,12 +132,51 @@ or it may generate trait implementations based on a template.
 
 In some ways, Dog attributes help fulfill the need for C/C++ preprocessor instructions and macros.
 
+## reflection
+
+TODO.
+
+
+
+
 ## attribute
 
+An underscore is used to indicate that you are about to apply an attribute to a module, function, structure, or entry point.
+
+Example of adding `MyAttribute` to a function named `my_fun`.
 ```
-#my_attribute
+_MyAttribute(metadata1:"interesting", metadata2:123)
+fn my_fun() {
+}
+
+... later
+
+    // attribute_value is a helper function to check if an attribute exists and then returning the value of the property
+    if "interesting" == myfun.attribute_value(MyAttribute::metadata1) {
+    }
+    
+    // otherwise you could do it by hand and get the same result:
+    let x: String = myfun.attribute(MyAttribute).metadata otherwise null
+    if "interesting" == x {
+    }
+    
+    // or even something like this if you want to do something special when the attribute doesn't exist
+    if "interesting" == myfun.attribute(MyAttribute).metadata {
+    } otherwise {
+        // an exception occurred because the attribute didn't exist, but we can do something here with this info
+    }
+    
+    
 ```
 
+Attributes are processed at compile time to apply metadata or to generate logic. The metadata can only have properties 
+that are Strings, ints, floats, or boolean.
+```
+attr MyAttribute {
+    metadata1: String
+    metadata2: int
+}
+```
 # unsafe
 ## functions
 ```

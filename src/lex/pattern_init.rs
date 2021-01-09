@@ -44,6 +44,7 @@ unsafe fn build_patterns() {
     PATTERNS.push(build_keyword("_break", "break"));
     PATTERNS.push(build_keyword("_continue", "continue"));
     PATTERNS.push(build_keyword("_with", "with")); // syntactical sugar to acquire/release resources
+    PATTERNS.push(build_keyword("_isa", "isa"));
 
     // entry points
     PATTERNS.push(build_keyword("_app", "app"));
@@ -66,12 +67,13 @@ unsafe fn build_patterns() {
     PATTERNS.push(build_keyword("_public", "pub"));
     PATTERNS.push(build_keyword("_mutable", "mut"));
     PATTERNS.push(build_keyword("_constant", "const"));
-    //PATTERNS.push(build_keyword("reference", "ref"));
+    PATTERNS.push(build_keyword("_once", "once"));
+    //PATTERNS.push(build_keyword("_reference", "ref"));
     PATTERNS.push(build_keyword("_unsafe", "unsafe"));
 
     // scope
     PATTERNS.push(build_keyword("_use", "use")); // use [external library name::]<module name>::<submodule name>[::func] as name
-    PATTERNS.push(build_keyword("_as", "as")); // use [external library name::]<module name>::<submodule name>::global_var as name
+    PATTERNS.push(build_keyword("_as", "as")); // cast variable || use [external library name::]<module name>::<submodule name>::global_var as name
     PATTERNS.push(build_keyword("_module", "mod")); // mod [[module name]::[submodulename]] [(os: "windows", arch: "x86")]
 
     // types
@@ -80,6 +82,7 @@ unsafe fn build_patterns() {
     PATTERNS.push(build_keyword("_float", "float"));
     PATTERNS.push(build_keyword("_boolean", "bool"));
     PATTERNS.push(build_keyword("_character", "char"));
+    PATTERNS.push(build_keyword("_void", "void"));
 
     PATTERNS.push(build_keyword("_false", "false"));
     PATTERNS.push(build_keyword("_true", "true"));

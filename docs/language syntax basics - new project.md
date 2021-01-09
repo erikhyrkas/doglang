@@ -50,14 +50,14 @@ keyword: app
 Creates a standard console application that can take in parameters.
 
 ```
-app MyApp(args:[string]) {
+app fn MyApp(args:[string]) {
 }
 ```
 
 Args is optional, so it can be written like:
 
 ```
-app MyApp() {
+app fn MyApp() {
 }
 ```
 

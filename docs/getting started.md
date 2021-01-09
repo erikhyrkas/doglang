@@ -8,7 +8,7 @@ the syntax one has to learn to be effective.
 Creating a simple application that prints out `Hello World!`.
 
 ```
-app HelloWorld() {
+app fn HelloWorld() {
   println('Hello world!') 
 }
 ``` 
@@ -22,7 +22,7 @@ fn saySomething(something: string) {
     println(something)
 }
 
-app HelloWorld() {
+app fn HelloWorld() {
   saySomething('I did it!') 
 }
 ```
@@ -43,7 +43,7 @@ fn compute(values: [int]): int {
     return result
 }
 
-app Compute() {
+app fn Compute() {
     let value1: string = requestValue()
     let value2: string = requestValue()
     let result: int = compute( value1 as int otherwise 0, value2 as int otherwise 0)
