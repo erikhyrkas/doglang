@@ -1636,3 +1636,35 @@ people know how to create EC2 instances easily, and they know how to scale them 
 expertise without additional complexity. 
 
 
+## Period vs Double Colon
+
+There are some functions called like `my_trait.do_something()` while others look like `MyTrait::do_something()`, what's 
+the difference. The double-colon signifies a reference to a constant. The function belongs in the namespace of a trait,
+but isn't actually part of a given instance. A period however indicates that the reference is to something that is in
+an instance and is aware of member variables.
+
+The syntax difference is simply to ensure that the developer is aware of what they are doing, and that they are doing
+what they are doing intentionally. You cannot override a constant function, but you could have a different trait with
+the same function name. You also constant functions must be referenced with the namespace they are in, not an instance
+of that namespace.
+
+Given:
+```
+trait MyTrait {
+  const fn do_something(): int {
+    return 5
+  }
+}
+```
+
+This is invalid:
+```
+  let my_instance: MyTrait = ...
+  
+  let x: int = my_instance::do_something() // invalid: can't call a const function from an instance
+```
+
+This is valid:
+```
+  let x: int = MyTrait::do_something() // valid: can call a const function from trait
+```
