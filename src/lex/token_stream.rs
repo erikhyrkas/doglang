@@ -77,7 +77,11 @@ impl TokenStream {
     #[allow(dead_code)]
     pub fn reset(&mut self, offset: usize) {
         if self.matches.is_empty() || offset >= self.matches.len() {
+            self.fresh = true;
             return;
+        }
+        if offset == 0 {
+            self.fresh = true;
         }
         self.offset = offset;
     }
